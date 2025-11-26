@@ -1,6 +1,6 @@
 import { Card, Tabs } from "antd";
 import Map from "@/components/map";
-import OrderManagement from "@/components/order-management";
+import OrderManagement from "@/components/orders/order-management";
 
 const containerStyle: React.CSSProperties = {
 	width: "100%",
