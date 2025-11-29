@@ -78,7 +78,7 @@ const LoginPage = () => {
 								if (role === "admin") {
 									setTimeout(() => navigate("/dashboard"), 800);
 								} else if(role === "merchant") {
-									setTimeout(() => navigate("/merchant"), 800);
+									setTimeout(() => navigate("/merchant/order"), 800);
 								} 
 								 // else {
 									// 默认情况下也进行跳转，避免无响应

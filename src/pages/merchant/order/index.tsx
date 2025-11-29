@@ -8,9 +8,9 @@ import { Table, Card, Radio, Input, Button, Typography, Space, Popconfirm, Divid
 import { ReloadOutlined, SearchOutlined, CheckCircleOutlined, ExclamationCircleOutlined ,DeleteOutlined} from "@ant-design/icons";
 import { supabase } from "@/lib/supabaseClient";
 import { useToastMessage } from "@/hooks/useToastMessage";
-import OrderDetailModal from "./order-detail-modal";
-import DeleteModal from "./delete-modal";
-import LogisticsProviderModal from "./logistics-provider-modal";
+import OrderDetailModal from "../../../components/orders/order-detail-modal";
+import DeleteModal from "../../../components/orders/delete-modal";
+import LogisticsProviderModal from "../../../components/orders/logistics-provider-modal";
 import { updateOrderLogisticsProvider } from "@/services/logisticsService";
 
 // -----------------------------------------------------------------------------

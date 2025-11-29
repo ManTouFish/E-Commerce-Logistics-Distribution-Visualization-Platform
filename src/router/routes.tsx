@@ -2,7 +2,8 @@ import { type RouteObject, Navigate } from "react-router-dom";
 import DashboardPage from "@/pages/dashboard";
 import LoginPage from "@/pages/login";
 import MerchantPage from "@/pages/merchant";
-import LogisticsTrajectoryPage from "@/pages/trajectory/LogisticsTrajectoryPage";
+import LogisticsTrajectoryPage from "@/pages/merchant/trajectory/LogisticsTrajectoryPage";
+import OrderManagement from "@/pages/merchant/order";
 
 export const appRoutes: RouteObject[] = [
 	{
@@ -20,10 +21,16 @@ export const appRoutes: RouteObject[] = [
 	{
 		path: "/merchant",
 		element: <MerchantPage />,
-	},
-	{
-		path: "/trajectory",
-		element: <LogisticsTrajectoryPage />,
+		children: [
+			{
+				path: "order",
+				element: <OrderManagement />,
+			},
+			{
+				path: "trajectory",
+				element: <LogisticsTrajectoryPage />,
+			},
+		],
 	},
 	{
 		path: "*",
