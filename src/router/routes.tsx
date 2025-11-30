@@ -1,7 +1,9 @@
 import { type RouteObject, Navigate } from "react-router-dom";
 import DashboardPage from "@/pages/dashboard";
 import LoginPage from "@/pages/login";
-import TestPage from "@/pages/test";
+import MerchantPage from "@/pages/merchant";
+import LogisticsTrajectoryPage from "@/pages/merchant/trajectory/LogisticsTrajectoryPage";
+import OrderManagement from "@/pages/merchant/order";
 
 export const appRoutes: RouteObject[] = [
 	{
@@ -17,8 +19,18 @@ export const appRoutes: RouteObject[] = [
 		element: <DashboardPage />,
 	},
 	{
-		path: "/test",
-		element: <TestPage />,
+		path: "/merchant",
+		element: <MerchantPage />,
+		children: [
+			{
+				path: "order",
+				element: <OrderManagement />,
+			},
+			{
+				path: "trajectory",
+				element: <LogisticsTrajectoryPage />,
+			},
+		],
 	},
 	{
 		path: "*",
