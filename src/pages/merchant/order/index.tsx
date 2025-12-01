@@ -262,13 +262,13 @@ const OrderList = () => {
 			render: (text) => <span className="text-[13px] text-slate-400 font-mono tracking-wide select-all">{text}</span>,
 		},
 		{
-			title: "收货地址",
-			dataIndex: "customer_address",
-			key: "customer_address",
+			title: "客户位置",
+			dataIndex: "customer_location",
+			key: "customer_location",
 			ellipsis: { showTitle: false },
-			render: (address) => (
-				<Tooltip title={address} placement="topLeft" className="max-w-xs">
-					<span className="text-slate-400 text-xs">{address}</span>
+			render: (location) => (
+				<Tooltip title={location ? `经度: ${location.coordinates[0]}, 纬度: ${location.coordinates[1]}` : "未设置"} placement="topLeft" className="max-w-xs">
+					<span className="text-slate-400 text-xs">{location ? `${location.coordinates[1].toFixed(4)}, ${location.coordinates[0].toFixed(4)}` : "未设置"}</span>
 				</Tooltip>
 			),
 		},
@@ -332,17 +332,12 @@ const OrderList = () => {
 						</Popconfirm>
 					)}
 					{record.status === "confirmed" && (
-						<Popconfirm
-							title={<span className="font-medium text-slate-700">确认发货</span>}
-							description={<span className="text-slate-500 text-xs">确认后订单将进入运输中状态</span>}
-							onConfirm={() => handleShipOrder(record.id)}
-							okText="确认"
-							cancelText="取消"
-							icon={<CheckCircleOutlined style={{ color: "#0ea5e9" }} />}>
-							<button className="group flex items-center gap-1 text-xs font-medium text-sky-500 hover:text-sky-600 transition-all duration-200 active:scale-95">
-								<span>发货</span>
-							</button>
-						</Popconfirm>
+						<button
+							className="group flex items-center gap-1 text-xs font-medium text-sky-500 hover:text-sky-600 transition-all duration-200 active:scale-95"
+							onClick={() => handleShipOrder(record.id)}
+						>
+							<span>发货</span>
+						</button>
 					)}
 					<Popconfirm
 						title={<span className="font-medium text-slate-800">删除订单</span>}
@@ -526,6 +521,7 @@ const OrderList = () => {
 					onCancel={() => setLogisticsModalOpen(false)}
 					onConfirm={(providerId) => handleConfirmShipping(selectedOrderId, providerId)}
 					loading={shipLoading}
+					orderId={selectedOrderId} // 传递订单ID
 				/>
 			</div>
 		</ConfigProvider>

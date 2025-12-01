@@ -8,6 +8,7 @@ export interface LogisticsProvider {
   code: string;
   contact_phone: string;
   average_delivery_time: number;
+  delivery_speed: number; // 配送速度，单位为千米每小时
   is_active: boolean;
   created_at: string;
 }

@@ -14,6 +14,8 @@ export interface Order {
 	created_at: string;
 	updated_at: string;
 	logistics_provider_id: string;
+	delivery_distance: number; // 配送距离，单位：公里
+	limited_delivery_time: number; // 最大配送时间，单位：小时
 }
 
 // 订单查询参数类型
