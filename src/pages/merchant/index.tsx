@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Layout, Menu, Avatar, Dropdown, Space, ConfigProvider, theme, message } from "antd";
-import { OrderedListOutlined, EnvironmentOutlined,UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { OrderedListOutlined, EnvironmentOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -119,7 +119,7 @@ const MainLayout = () => {
 								}}>
 								<div className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 px-2 py-1 rounded-md transition-colors">
 									<Avatar style={{ backgroundColor: "#1677ff" }} icon={<UserOutlined />} />
-									<span className="text-sm text-slate-600">管理员</span>
+									<span className="text-sm text-slate-600">用户</span>
 								</div>
 							</Dropdown>
 						</Space>

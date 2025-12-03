@@ -4,7 +4,9 @@ import LoginPage from "@/pages/login";
 import MerchantPage from "@/pages/merchant";
 import LogisticsTrajectoryPage from "@/pages/merchant/trajectory/LogisticsTrajectoryPage";
 import OrderManagement from "@/pages/merchant/order";
+import DeliveryRangeManagementPage from "@/pages/dashboard/delivery-range-management";
 import UserPage from "@/pages/user";
+
 export const appRoutes: RouteObject[] = [
 	{
 		path: "/",
@@ -17,6 +19,12 @@ export const appRoutes: RouteObject[] = [
 	{
 		path: "/dashboard",
 		element: <DashboardPage />,
+		children: [
+			{
+				path: "delivery-range",
+				element: <DeliveryRangeManagementPage />,
+			},
+		],
 	},
 	{
 		path: "/merchant",

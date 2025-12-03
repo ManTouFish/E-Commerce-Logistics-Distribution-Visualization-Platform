@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { Spin, message, Select, Button, Card, Space } from "antd";
 import { getOrderTrajectory, getOrdersTrajectories } from "@/services/logisticsService";
+import { getCurrentUserShop, updateShopRectangularDeliveryRange } from "@/services/shopService";
 import type { LogisticsTrajectory, Order } from "@/types/order";
+import type { Shop } from "@/services/shopService";
 
 const { Option } = Select;
 
@@ -41,13 +43,20 @@ const STATUS_NAMES: Record<TrajectoryStatus, string> = {
 	delivered: "已送达",
 };
 
+// 地图组件暴露的方法类型
+interface TrajectoryMapRef {
+	handleDeliveryRangeUpdate: () => Promise<void>;
+}
+
 interface TrajectoryMapProps {
 	orders?: Order[]; // 可选的订单列表，用于展示多个订单的轨迹
 	selectedOrderId?: string; // 当前选中的订单ID
 	onOrderSelect?: (orderId: string) => void; // 订单选择回调
+	showOnlyInRange?: boolean; // 是否只显示配送范围内的订单
+	onDeliveryRangeUpdate?: () => void; // 配送范围更新回调
 }
 
-const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: TrajectoryMapProps) => {
+const TrajectoryMap = forwardRef<TrajectoryMapRef, TrajectoryMapProps>(({ orders = [], selectedOrderId, onOrderSelect, showOnlyInRange = false, onDeliveryRangeUpdate }, ref) => {
 	const [messageApi, contextHolder] = message.useMessage();
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const mapInstanceRef = useRef<AMapMapInstance | null>(null);
@@ -58,6 +67,7 @@ const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: Trajecto
 	const [showAllTrajectories, setShowAllTrajectories] = useState(false);
 	const markersRef = useRef<AMapMarker[]>([]);
 	const polylinesRef = useRef<AMapPolyline[]>([]);
+	const [currentShop, setCurrentShop] = useState<Shop | null>(null);
 
 	// 加载指定订单的轨迹
 	const loadOrderTrajectory = useCallback(async (orderId: string) => {
@@ -288,6 +298,73 @@ const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: Trajecto
 		setCurrentOrderId(undefined);
 	};
 
+	// 处理配送范围更新
+	const handleDeliveryRangeUpdate = async () => {
+		if (!mapInstanceRef.current || !currentShop) {
+			messageApi.error("地图未加载完成或商家信息不可用");
+			return;
+		}
+
+		try {
+			// 获取当前地图视图范围
+			const bounds = mapInstanceRef.current.getBounds();
+			if (!bounds) {
+				messageApi.error("无法获取地图视图范围");
+				return;
+			}
+
+			// 获取矩形范围的四个角点
+			const northeast = bounds.getNorthEast();
+			const southwest = bounds.getSouthWest();
+			
+			// 构建矩形范围的坐标
+			const deliveryRange = {
+				minLng: southwest.getLng(),
+				minLat: southwest.getLat(),
+				maxLng: northeast.getLng(),
+				maxLat: northeast.getLat()
+			};
+
+			// 调用API更新配送范围
+			await updateShopRectangularDeliveryRange(
+				currentShop.id, 
+				deliveryRange.minLng, 
+				deliveryRange.minLat, 
+				deliveryRange.maxLng, 
+				deliveryRange.maxLat
+			);
+			
+			messageApi.success("配送范围更新成功");
+			
+			// 调用回调函数，通知父组件配送范围已更新
+			if (onDeliveryRangeUpdate) {
+				onDeliveryRangeUpdate();
+			}
+		} catch (error) {
+			console.error("更新配送范围失败:", error);
+			messageApi.error("更新配送范围失败");
+		}
+	};
+
+	// 暴露方法给父组件
+	useImperativeHandle(ref, () => ({
+		handleDeliveryRangeUpdate
+	}));
+
+	// 加载当前商家信息
+	useEffect(() => {
+		const loadShopInfo = async () => {
+			try {
+				const shop = await getCurrentUserShop();
+				setCurrentShop(shop);
+			} catch (error) {
+				console.error("加载商家信息失败:", error);
+			}
+		};
+
+		loadShopInfo();
+	}, []);
+
 	// 初始化地图
 	useEffect(() => {
 		let destroyed = false;
@@ -376,11 +453,11 @@ const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: Trajecto
 			<Card
 				style={{
 					position: "absolute",
-					top: 10,
+					top: 510,
 					left: 10,
 					zIndex: 2,
-					width: 300,
-					maxHeight: "40%",
+					width: "20%",
+					maxHeight: "50%",
 					overflow: "auto",
 				}}
 				size="small"
@@ -413,7 +490,7 @@ const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: Trajecto
 						loading={trajectoryLoading}
 						style={{ width: "100%" }}
 					>
-						显示所有轨迹
+						{showOnlyInRange && (!orders || orders.length === 0) ? "配送范围内没有订单" : "显示所有轨迹"}
 					</Button>
 					
 					{trajectoryLoading && (
@@ -449,6 +526,8 @@ const TrajectoryMap = ({ orders = [], selectedOrderId, onOrderSelect }: Trajecto
 			<div ref={containerRef} style={{ width: "100%", height: "100%" }} />
 		</div>
 	);
-};
+});
+
+TrajectoryMap.displayName = 'TrajectoryMap';
 
 export default TrajectoryMap;

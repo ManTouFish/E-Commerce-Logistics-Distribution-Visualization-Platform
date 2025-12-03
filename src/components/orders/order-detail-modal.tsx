@@ -164,7 +164,13 @@ const OrderDetailModal = ({ open, onClose, order }: OrderDetailModalProps) => {
             <Descriptions.Item label="快递公司">
               {logisticsProvider ? logisticsProvider.name : (order.logistics_provider_id ? "加载中..." : "未指定")}
             </Descriptions.Item>
-            <Descriptions.Item label="订单总额" span={2}>
+            <Descriptions.Item label="配送距离">
+              {order.delivery_distance ? `${order.delivery_distance.toFixed(2)} 公里` : "未计算"}
+            </Descriptions.Item>
+            <Descriptions.Item label="最大配送时间">
+              {order.limited_delivery_time ? `${order.limited_delivery_time} 小时` : "未设置"}
+            </Descriptions.Item>
+            <Descriptions.Item label="订单总额">
               <span className="text-lg font-bold text-red-500">
                 ¥{Number(order.total_amount).toFixed(2)}
               </span>
