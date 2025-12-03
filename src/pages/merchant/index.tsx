@@ -80,7 +80,7 @@ const MainLayout = () => {
 						{collapsed ? (
 							<div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center text-white font-bold">Z</div>
 						) : (
-							<span className="text-white text-lg font-bold tracking-wider">电商物流配送可视化平台</span>
+							<span className="text-white text-lg font-bold tracking-wider">物流镜头</span>
 						)}
 					</div>
 

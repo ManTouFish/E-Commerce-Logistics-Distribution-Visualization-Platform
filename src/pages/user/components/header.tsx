@@ -18,7 +18,7 @@ const Header = ({ userEmail, onLogout }: Props) => {
           <RocketOutlined style={{ fontSize: 18 }} />
         </div>
         <span className="text-lg font-bold text-slate-800 tracking-tight">
-          智配物流 · 用户端
+          物流镜头 · 用户端
         </span>
       </div>
 

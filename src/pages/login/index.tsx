@@ -83,14 +83,14 @@ const LoginPage = () => {
 
 	return (
 		<div className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${loginBg})` }}>
-			<div className="absolute inset-0" /> 
+			<div className="absolute inset-0" />
 			{contextHolder}
 
 			<div className="relative z-10 flex min-h-screen flex-col justify-center px-4 py-12 sm:px-6 lg:px-20 md:items-start">
 				<Card className="w-full max-w-md overflow-hidden rounded-2xl bg-white/95 shadow-2xl backdrop-blur-sm transition-all md:mr-10 lg:mr-20 p-1">
 					<div className="mb-8 text-center">
 						<Title level={2} className="!mb-2 !font-bold text-slate-800">
-							电商物流配送可视化平台
+							物流镜头
 						</Title>
 						<Text className="text-slate-500">使用企业账号登录，管理订单与出库进度</Text>
 					</div>
