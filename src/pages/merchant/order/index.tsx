@@ -263,13 +263,6 @@ const OrderList = () => {
 			render: (text) => <span className="text-[13px] text-slate-400 font-mono tracking-wide select-all">{text}</span>,
 		},
 		{
-			title: "客户位置",
-			dataIndex: "id",
-			key: "customer_location",
-			ellipsis: { showTitle: false },
-			render: (orderId) => <CustomerLocation orderId={orderId} />,
-		},
-		{
 			title: "总金额",
 			dataIndex: "total_amount",
 			key: "total_amount",
