@@ -6,6 +6,7 @@ export interface Order {
 	customer_name: string;
 	customer_phone: string;
 	customer_address: string;
+	receiver_location: string; // 收货位置，格式为"经度,纬度"
 	total_amount: number;
 	status: "pending" | "confirmed" | "shipping" | "delivered" | "cancelled";
 	priority: "low" | "normal" | "high" | "urgent";

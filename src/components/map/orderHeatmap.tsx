@@ -69,18 +69,24 @@ const OrderHeatmap: React.FC<HeatmapProps> = ({
 						});
 
 						// 提取订单位置数据
-						const heatmapData = orders.map(() => {
-							// 深圳区域范围内的随机坐标
-							const baseLng = 114.0579;
-							const baseLat = 22.5431;
-							const lng = baseLng + (Math.random() - 0.5) * 0.3;
-							const lat = baseLat + (Math.random() - 0.5) * 0.2;
-							return {
-								lng,
-								lat,
-								count: 1,
-							};
-						});
+		const heatmapData = orders
+			.filter(order => order.receiver_location) // 只包含有receiver_location的订单
+			.map(order => {
+				// 从receiver_location字段解析经纬度
+				const [lng, lat] = order.receiver_location.split(',').map(coord => parseFloat(coord.trim()));
+				
+				// 如果解析失败，跳过该订单
+				if (isNaN(lng) || isNaN(lat)) {
+					return null;
+				}
+				
+				return {
+					lng,
+					lat,
+					count: 1,
+				};
+			})
+			.filter(Boolean); // 过滤掉null值
 
 						// 使用requestAnimationFrame延迟热力图初始化
 						requestAnimationFrame(() => {

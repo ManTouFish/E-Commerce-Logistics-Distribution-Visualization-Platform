@@ -7,7 +7,7 @@ export const getOrders = async (params: OrderQueryParams): Promise<{ items: Orde
 	try {
 		let query = supabase
 			.from("orders")
-			.select("*, logistics_providers(name)", { count: "exact" });
+		.select("*, logistics_providers(name)", { count: "exact" });
 
 		// 状态筛选
 		if (params.status && params.status !== "ALL") {
